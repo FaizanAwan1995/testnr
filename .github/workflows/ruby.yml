@@ -12,18 +12,38 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      ImageOS: ubuntu18
+      BUILD_NUMBER: ${{ github.run_number }}
+      application_name: "testnr"
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Set environmental variables 📚
+        run: |
+          echo "GIT_COMMIT=${GITHUB_SHA}" >> $GITHUB_ENV
+          echo "FEATURE_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed  -E 's/(feature|fix|test|hotfix|bugfix|\/)//g' |  sed  -E 's/ /-/g' |  cut -c1-9 | tr '[:upper:]' '[:lower:]')"  >> $GITHUB_ENV
+          echo "SHORT_COMMIT=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
+          echo "BUILD_VERSION=${FEATURE_NAME}-${SHORT_COMMIT}" >> $GITHUB_ENV
 
-    - name: Set up Ruby
-      uses: actions/setup-node@v2.1.2
-      with:
-        ruby-version: ${{ env.RUBY_VERSION }}
+      - name: Checkout testnr Repo.
+        uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: bundle config specific_platform true && bundle install
+      - name: Install node version
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
 
-    - name: Run server
-      run: rails server
+      - name: Setup HostedToolCache
+        run: sudo mkdir -p /opt/hostedtoolcache && sudo chmod -R 777 /opt/hostedtoolcache
+      
+      - name: Install system dependencies 
+        run: sudo apt update && sudo apt install -y autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev
+
+      - name: Install ruby
+        uses: ruby/setup-ruby@v1
+        env:
+          ImageOS: ubuntu18
+        with:
+          ruby-version: '2.6'
+
+      - name: Install dependencies
+        run: bundle config specific_platform true && bundle install && bundle package
