@@ -45,7 +45,7 @@ jobs:
           ImageOS: ubuntu18
         with:
           ruby-version: '2.6'
-        run: gem update --system
+      - run: gem update --system
 
       - name: Install dependencies
         run: bundle config specific_platform true && bundle install && bundle package
