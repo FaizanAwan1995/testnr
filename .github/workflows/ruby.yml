@@ -23,10 +23,7 @@ jobs:
         ruby-version: ${{ env.RUBY_VERSION }}
 
     - name: Install dependencies
-      run: bundle config specific_platform true && bundle install && bundle package
+      run: bundle install
 
-    - name: Run Rake
-      run: bundle exec rake && bundle exec rake version:create && bundle config disable_exec_load true
-
-    - name: Zip vendor directory
-      run: zip -r vendor.zip vendor/
+    - name: Run server
+      run: rails server
