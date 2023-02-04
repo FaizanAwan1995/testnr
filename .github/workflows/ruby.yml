@@ -54,3 +54,6 @@ jobs:
         with:
           name: code-coverage
           path: coverage/
+
+      - name: Rails Run
+        run: rails server
