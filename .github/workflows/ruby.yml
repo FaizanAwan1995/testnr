@@ -37,6 +37,9 @@ jobs:
       
       - name: Install system dependencies 
         run: sudo apt update && sudo apt install -y autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev
+      
+      - name: Install update
+        uses: gem update --system 3.2.3
 
       - name: Install ruby
         uses: ruby/setup-ruby@v1
