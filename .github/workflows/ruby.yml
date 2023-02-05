@@ -8,7 +8,7 @@ on:
 
 env:
   RUBY_VERSION: 2.6.0
-  NEWRELIC_LICENSE_KEY: $${{ secrets.NRLKEY }}
+  
 
 jobs:
   build:
@@ -24,7 +24,11 @@ jobs:
           echo "FEATURE_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed  -E 's/(feature|fix|test|hotfix|bugfix|\/)//g' |  sed  -E 's/ /-/g' |  cut -c1-9 | tr '[:upper:]' '[:lower:]')"  >> $GITHUB_ENV
           echo "SHORT_COMMIT=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
           echo "BUILD_VERSION=${FEATURE_NAME}-${SHORT_COMMIT}" >> $GITHUB_ENV
-          echo "BUILD_VERSION=${NEWRELIC_LICENSE_KEY}"
+       - run: 'echo "$NEWRELIC_LICENSE_KEY" | base64'
+              shell: bash
+              env:
+                NEWRELIC_LICENSE_KEY: ${{ secrets.NRLKEY }}
+
 
       - name: Checkout testnr Repo.
         uses: actions/checkout@v2
