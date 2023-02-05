@@ -8,6 +8,7 @@ on:
 
 env:
   RUBY_VERSION: 2.6.0
+  NEWRELIC_LICENSE_KEY: $${{ secrets.NRLKEY }}
 
 jobs:
   build:
@@ -23,6 +24,7 @@ jobs:
           echo "FEATURE_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed  -E 's/(feature|fix|test|hotfix|bugfix|\/)//g' |  sed  -E 's/ /-/g' |  cut -c1-9 | tr '[:upper:]' '[:lower:]')"  >> $GITHUB_ENV
           echo "SHORT_COMMIT=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
           echo "BUILD_VERSION=${FEATURE_NAME}-${SHORT_COMMIT}" >> $GITHUB_ENV
+          echo "BUILD_VERSION=${NEWRELIC_LICENSE_KEY}"
 
       - name: Checkout testnr Repo.
         uses: actions/checkout@v2
@@ -48,12 +50,3 @@ jobs:
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
           
-        
-      - name: Upload Code Coverage
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-coverage
-          path: coverage/
-
-      - name: Rails Run
-        run: rails server
