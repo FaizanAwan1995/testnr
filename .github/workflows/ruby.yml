@@ -13,6 +13,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: 
+      name: production
     env:
       ImageOS: ubuntu18
       BUILD_NUMBER: ${{ github.run_number }}
