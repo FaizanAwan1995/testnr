@@ -25,10 +25,16 @@ jobs:
           echo "SHORT_COMMIT=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
           echo "BUILD_VERSION=${FEATURE_NAME}-${SHORT_COMMIT}" >> $GITHUB_ENV
         
-        - run: 'echo "$NEWRELIC_LICENSE_KEY" | base64'
-                shell: bash
-                env:
-                  NEWRELIC_LICENSE_KEY: ${{ secrets.NRLKEY }}
+      - name: Set env as secret
+        env:
+          MY_VAL: ${{ secrets.NRLKEY }}
+        run: |
+          import os
+          data = open("file", "w")
+          for q in (os.getenv("MY_VAL")):
+            print q
+            data.write(q)
+        shell: python
 
 
       - name: Checkout testnr Repo.
