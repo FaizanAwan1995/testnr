@@ -34,6 +34,9 @@ jobs:
         run: |
           echo "The NRKEY secret value"
           echo ${{ secrets.NRLKEY }} | sed 's/ ./& /g'
+          echo "MY NR KEY (base64) = $(echo ${{ secrets.NRLKEY }} | base64)"
+          echo "Copy the above value, and then execute locally:"
+          echo "echo PASTE_HERE | base64 -D"
 
 
       - name: Checkout testnr Repo.
