@@ -8,7 +8,7 @@ on:
 
 env:
   RUBY_VERSION: 2.6.0
-  
+  NRLKEY: ${{ secrets.NRLKEY }} 
 
 jobs:
   build:
@@ -20,23 +20,12 @@ jobs:
       BUILD_NUMBER: ${{ github.run_number }}
       application_name: "testnr"
     steps:
-      - name: Set environmental variables 📚
-        run: |
-          echo "GIT_COMMIT=${GITHUB_SHA}" >> $GITHUB_ENV
-          echo "FEATURE_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed  -E 's/(feature|fix|test|hotfix|bugfix|\/)//g' |  sed  -E 's/ /-/g' |  cut -c1-9 | tr '[:upper:]' '[:lower:]')"  >> $GITHUB_ENV
-          echo "SHORT_COMMIT=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
-          echo "BUILD_VERSION=${FEATURE_NAME}-${SHORT_COMMIT}" >> $GITHUB_ENV
         
       - name: Value NR as secret
-
-        
         
         run: |
-          echo "The NRKEY secret value"
-          echo ${{ secrets.NRLKEY }} | sed 's/ ./& /g'
-          echo "MY NR KEY (base64) = $(echo ${{ secrets.NRLKEY }} | base64)"
-          echo "Copy the above value, and then execute locally:"
-          echo "echo PASTE_HERE | base64 -D"
+          echo "The NRKEY base 64 secret value"
+          echo "MY NR KEY (base64) = $(echo ${NRLKEY} | base64)"
 
 
       - name: Checkout testnr Repo.
